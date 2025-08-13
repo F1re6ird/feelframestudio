@@ -7,11 +7,12 @@ import WeirdNav from '../components/WeirdNav'
 
 import useFetch from '../components/hooks/UseFetch'
 import WorkNote from '../components/WorkNote'
+import { VideoItem } from '../type';
 
 
 const Page = () => {
 
-    const { data, loading } = useFetch(`${process.env.NEXT_PUBLIC_API_URL}/api/videos?populate=previewVideo`
+    const { data, loading } = useFetch<VideoItem[]>(`${process.env.NEXT_PUBLIC_API_URL}/api/videos?populate=previewVideo`
     );
 
 
@@ -21,7 +22,7 @@ const Page = () => {
             <WeirdNav />
             <WorkNote />
             <div className='w-full px-4 my-36'>
-                <VideoGrid videos={data} loading={loading} />
+                <VideoGrid videos={data ?? []} loading={loading} />
             </div>
 
             <Footer />

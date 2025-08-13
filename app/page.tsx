@@ -9,6 +9,35 @@ import SomeOfOurWorks from './components/SomeOfOurWorks';
 import useFetch from './components/hooks/UseFetch';
 import { FaPlay } from "react-icons/fa";
 
+type HighlightReel = {
+  youtubeLink: string
+  previewVideo: {
+    id: number
+    documentId: string
+    name: string
+    alternativeText: string | null
+    caption: string | null
+    width: number | null
+    height: number | null
+    formats: Record<string, unknown>
+    hash: string
+    ext: string
+    mime: string
+    size: number
+    url: string
+    previewUrl: string | null
+    provider: string
+    provider_metadata: {
+      public_id: string
+      resource_type: string
+    }
+    createdAt: string
+    updatedAt: string
+    publishedAt: string
+  }[]
+}
+
+
 
 
 const Page = () => {
@@ -16,7 +45,7 @@ const Page = () => {
   const [showPlay, setShowPlay] = useState(false);
   const highlightRef = useRef<(HTMLVideoElement | null)>(null);
 
-  const { data, loading } = useFetch(`${process.env.NEXT_PUBLIC_API_URL}/api/highlight-reel?populate=previewVideo`
+  const { data, loading } = useFetch<HighlightReel>(`${process.env.NEXT_PUBLIC_API_URL}/api/highlight-reel?populate=previewVideo`
   );
 
 
@@ -63,7 +92,7 @@ const Page = () => {
             onMouseEnter={() => handleMouseEnter()}
             onMouseLeave={() => handleMouseLeave()}
           >
-            <source src={`${data.previewVideo[0].url}`} />
+            <source src={data?.previewVideo?.[0]?.url ?? ""} />
           </video>)
         }
 
@@ -72,7 +101,7 @@ const Page = () => {
         <VideoModal
           isOpen={showModal}
           onClose={() => setShowModal(false)}
-          videoSrc={loading ? "" : data.youtubeLink}
+          videoSrc={loading ? "" : data?.youtubeLink}
         />
 
         <div>

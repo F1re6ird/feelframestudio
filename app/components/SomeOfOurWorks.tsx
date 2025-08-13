@@ -2,16 +2,17 @@ import React from 'react'
 import useFetch from './hooks/UseFetch'
 import { useRouter } from 'next/navigation'
 import VideoGrid from './VideoGrid';
+import { VideoItem } from '../type';
 
 const SoneOfOurWorks = () => {
-    const { data, loading } = useFetch(`${process.env.NEXT_PUBLIC_API_URL}/api/videos?populate=previewVideo&filters[displayOnHome]=true`
+    const { data, loading } = useFetch<VideoItem[]>(`${process.env.NEXT_PUBLIC_API_URL}/api/videos?populate=previewVideo&filters[displayOnHome]=true`
     );
 
     const router = useRouter();
 
     return (
         <section className=' text-[#f5f5f5] p-4 mt-12'>
-            <VideoGrid videos={data} loading={loading} />
+            <VideoGrid videos={data ?? []} loading={loading} />
 
 
             <div

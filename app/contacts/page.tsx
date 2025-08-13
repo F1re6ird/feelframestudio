@@ -11,6 +11,11 @@ import WeirdNav from '../components/WeirdNav';
 import useFetch from '../components/hooks/UseFetch';
 import { FaEnvelope } from "react-icons/fa";
 
+type SocialLinks = {
+  instagramLink: string;
+  youtubeLink: string;
+};
+
 
 
 const Page = () => {
@@ -18,7 +23,7 @@ const Page = () => {
     const [show, setShow] = useState(false)
     const [status, setStatus] = useState('')
 
-    const { data, loading } = useFetch(`${process.env.NEXT_PUBLIC_API_URL}/api/social-link`
+    const { data, loading } = useFetch<SocialLinks>(`${process.env.NEXT_PUBLIC_API_URL}/api/social-link`
     );
 
 
@@ -171,11 +176,11 @@ const Page = () => {
                     </h1>
                     <div className='flex gap-6 h-fit w-fit justify-center '>
 
-                        <a href={loading ? "" : data.instagramLink} target="_blank" rel="noreferrer">
+                        <a href={loading ? "" : data?.instagramLink} target="_blank" rel="noreferrer">
                             <FaInstagram className='fill-[#f5f5f5] hover:fill-[#d85425] hover:scale-90 transition-all ease-in duration-100' size={30} />
                         </a>
 
-                        <a href={loading ? "" : data.youtubeLink} target="_blank" rel="noreferrer">
+                        <a href={loading ? "" : data?.youtubeLink} target="_blank" rel="noreferrer">
                             <FaYoutube className='fill-[#f5f5f5] hover:fill-[#d85425] hover:scale-90 transition-all ease-in duration-100' size={30} />
                         </a>
 

@@ -4,16 +4,19 @@
 import { useEffect } from 'react'
 import { GiCancel } from "react-icons/gi"
 
-function getYouTubeId(url: string): string {
+function getYouTubeId(url: string): string | null {
+    if (url) {
+        return ""
+    }
     const regExp = /^.*(youtu\.be\/|v=)([^#&?]*).*/;
     const match = url.match(regExp);
     return match && match[2].length === 11 ? match[2] : '';
 }
 
-export default function VideoModal({ isOpen, onClose, videoSrc = "https://www.youtube.com/watch?v=tTRQp-d6E0c" }: {
+export default function VideoModal({ isOpen, onClose, videoSrc }: {
     isOpen: boolean
     onClose: () => void
-    videoSrc: string
+    videoSrc: string | undefined
 }) {
     // Disable scroll when modal is open
     useEffect(() => {
@@ -46,7 +49,10 @@ export default function VideoModal({ isOpen, onClose, videoSrc = "https://www.yo
 
                 <iframe
                     className="w-full sm:w-[80%] h-[450px]"
-                    src={`https://www.youtube.com/embed/${getYouTubeId(videoSrc)}`}
+                    src={getYouTubeId(videoSrc ?? "")
+                        ? `https://www.youtube.com/embed/${getYouTubeId(videoSrc ?? "")}`
+                        : ""
+                    }
                     title={"Feelframe Studio - Showreel"}
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
@@ -55,3 +61,5 @@ export default function VideoModal({ isOpen, onClose, videoSrc = "https://www.yo
         </div>
     );
 }
+
+

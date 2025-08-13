@@ -2,8 +2,13 @@ import React from 'react'
 import useFetch from './hooks/UseFetch'
 import { useEffect } from 'react'
 
+type WorkNoteData = {
+  title: string;
+  note: string;
+};
+
 const WorkNote = () => {
-    const { data, loading } = useFetch(`${process.env.NEXT_PUBLIC_API_URL}/api/work-note`
+    const { data, loading } = useFetch<WorkNoteData>(`${process.env.NEXT_PUBLIC_API_URL}/api/work-note`
     );
 
     useEffect(() => {
