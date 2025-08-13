@@ -1,13 +1,7 @@
 import React from 'react';
 import Video from './Video';
 
-interface VideoPageProps {
-  params: {
-    videoId: string;
-  };
-}
-
-export default async function VideoPage({ params }: VideoPageProps) {
-  const { videoId } = await params; // ✅ Await before destructuring
+export default async function VideoPage(props: { params: Promise<{ videoId: string }> }) {
+  const { videoId } = await props.params; // ✅ await before accessing
   return <Video videoId={videoId} />;
 }
