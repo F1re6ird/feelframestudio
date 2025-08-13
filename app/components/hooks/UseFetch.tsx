@@ -1,15 +1,31 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 
-type StrapiResponse<T> = {
-  data: T;
-  meta?: any;
+// Define a type for Strapi's common pagination metadata
+type Pagination = {
+  page: number;
+  pageSize: number;
+  pageCount: number;
+  total: number;
 };
 
-function useFetch<T = any>(url: string) {
+// Define a type for the full metadata object
+type Meta = {
+  pagination: Pagination;
+};
+
+// Define the shape of a Strapi API response
+type StrapiResponse<T> = {
+  data: T;
+  meta?: Meta;
+};
+
+// The generic type T is no longer set to 'any' by default
+function useFetch<T>(url: string) {
+  // Specify a more precise type for the state
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState<AxiosError | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -17,18 +33,28 @@ function useFetch<T = any>(url: string) {
     const fetchData = async () => {
       setLoading(true);
       try {
+        // The Axios response is correctly typed
         const response = await axios.get<StrapiResponse<T>>(url);
-        if (isMounted) setData(response.data.data);
-      } catch (err: any) {
-        if (isMounted) setError(err);
+        if (isMounted) {
+          setData(response.data.data);
+        }
+      } catch (err) {
+        if (isMounted) {
+          // Cast the error to AxiosError for type safety
+          setError(err as AxiosError);
+        }
       } finally {
-        if (isMounted) setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
+
     fetchData();
 
+    // Cleanup function to prevent memory leaks
     return () => {
-      isMounted = false; // prevent setting state on unmounted component
+      isMounted = false;
     };
   }, [url]);
 
